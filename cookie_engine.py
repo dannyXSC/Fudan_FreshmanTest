@@ -2,7 +2,7 @@ import json
 import time
 from selenium import webdriver
 
-from environment import driver_path, auth_url, cookie_path
+from environment import auth_url, cookie_path, input_wait_time
 
 
 def load_cookies(log_url, browser):
@@ -10,7 +10,7 @@ def load_cookies(log_url, browser):
     获取cookies保存至本地
     """
     browser.get(log_url)
-    time.sleep(15)  # 进行扫码
+    time.sleep(input_wait_time)  # 进行扫码
     dictCookies = browser.get_cookies()  # 获取list的cookies
     jsonCookies = json.dumps(dictCookies)  # 转换成字符串保存
 
@@ -25,7 +25,3 @@ def get_cookies(browser):
     for cookie in listCookies:
         browser.add_cookie(cookie)
 
-
-if __name__ == '__main__':
-    driver = webdriver.Chrome(executable_path=driver_path)
-    load_cookies(auth_url, driver)
