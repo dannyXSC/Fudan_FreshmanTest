@@ -42,8 +42,6 @@ cookie_path = 'asset/cookies.txt'
 question_path = "asset/questions.json"
 
 if_load_cookie = False
-if_load_question = False
-# 只有if_load_question为True if_add_question才生效
 if_add_question = True
 
 input_wait_time = 20
@@ -53,17 +51,25 @@ input_wait_time = 20
 - auth_url: 复旦验证服务器的url。
 - main_page: 测试界面的url，测试界面如下图所示。
 ![img.png](asset/img.png)
-- take_page: 暂时没用上
 - cookie_path: 保存cookie的位置（不上传到github）
 - question_path: 保存题库的位置（上传）
 - if_load_cookie: 是否每次启动要加载一次cookie（为True则要重新加载）
   - 默认情况如果加载过cookie，则之后启动不再需要cookie
   - 当你很久未使用本项目（cookie失效），要么删除cookie.txt，要么将这个变量设置为True
-- if_load_question: 是否每次启动要更新题库（为True则更新）
 - if_add_question: 每次更新是覆盖还是增加（为True则增加）
 - input_wait_time: 输入密码的时间(s)
 
 ## 运行
+因为存在多选题，所以你在运行程序之前必须把未完成的测试提交了
+
+这样是错误的
+
+![img_1.png](asset/img6.png)
+
+而这样是正确的
+
+![img.png](asset/img5.png)
+
 在项目文件夹打开terminal，输入以下命令
 ```text
 python main.py
@@ -78,11 +84,12 @@ python main.py
 ### 扩充题库
 为了以防未来题库扩充，或者题库数据被污染，所以本项目带有扩充题库功能。
 
-届时，只需要在`environment.py`中，将以下两项设置为True即可
+如果你需要删除以前的题库，则将`environment.py`中的`if_add_question`设置为False
 ```python
-if_load_question = True
-# 只有if_load_question为True if_add_question才生效
-if_add_question = True
+if_add_question = False
 ```
-再运行程序，程序每次运行会扩充一次题库
-运行多次程序之后，程序正确率应该会逐步上升。
+并执行以下命令，否则则将`if_add_question`设置为True，此时，题库将会增长而不覆盖。
+```text
+python load_question.py
+```
+

@@ -1,3 +1,5 @@
+import json
+import time
 from typing import List
 
 from selenium.webdriver.remote.webdriver import WebDriver, WebElement
@@ -74,4 +76,16 @@ def answer_all_questions(browser: WebDriver, question_dict: dict):
     answer_question(browser, question_dict)
     while goto_next_question(browser) is not None:
         answer_question(browser, question_dict)
+    time.sleep(5)
     submit_exam(browser)
+
+
+def save_question_list(question_list: List[Question], path):
+    with open(path, 'w') as f:
+        f.write(json.dumps([question.to_dict() for question in question_list]))
+
+
+def load_question_list(path):
+    with open(path, 'r', encoding='utf8') as f:
+        question_list_json = json.loads(f.read())
+    return [Question.from_dict(question) for question in question_list_json]
