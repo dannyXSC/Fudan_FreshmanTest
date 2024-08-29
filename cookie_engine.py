@@ -2,6 +2,7 @@ import json
 import os
 import time
 from selenium import webdriver
+from selenium.webdriver.edge.service import Service
 
 from environment import auth_url, cookie_path, input_wait_time, driver_path, main_page, if_load_cookie
 
@@ -28,14 +29,15 @@ def get_cookies(browser, path=cookie_path):
 
 
 def driver_get_with_cookies(url, path=cookie_path):
-    browser = webdriver.Chrome(executable_path=driver_path)
+    service = Service(executable_path=driver_path)
+    browser = webdriver.Edge(service=service)
 
     if not os.path.exists(path) or if_load_cookie:
         try:
             load_cookies(auth_url, browser, path)
         finally:
             browser.quit()
-            browser = webdriver.Chrome(executable_path=driver_path)
+            browser = webdriver.Edge(service=service)
 
     browser.get(url)
     get_cookies(browser, path)
@@ -45,7 +47,8 @@ def driver_get_with_cookies(url, path=cookie_path):
 
 
 if __name__ == "__main__":
-    driver = webdriver.Chrome(executable_path=driver_path)
+    service = Service(executable_path=driver_path)
+    driver = webdriver.Edge(service=service)
     load_cookies(auth_url, driver, "./my_cookie.txt")
     input()
     driver.quit()

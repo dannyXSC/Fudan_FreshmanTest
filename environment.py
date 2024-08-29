@@ -1,7 +1,7 @@
-driver_path = r"D:\web_driver\chromedriver116\chromedriver.exe"
-# default
+driver_path = "msedgedriver.exe"
+
 auth_url = "https://uis.fudan.edu.cn/authserver/login"
-main_page = r"https://elearning.fudan.edu.cn/courses/70240/quizzes/9962"
+main_page = "https://elearning.fudan.edu.cn/courses/77197/quizzes/11131"
 
 cookie_path = 'asset/cookies.txt'
 question_path = "asset/questions.json"
