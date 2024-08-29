@@ -3,22 +3,23 @@ import time
 from typing import List
 
 from selenium.webdriver.remote.webdriver import WebDriver, WebElement
+from selenium.webdriver.common.by import By
 
 from operation_engine import goto_next_question, submit_exam
 from question import Question
 
 
 def get_questions_answers(browser: WebDriver) -> List[Question]:
-    result = browser.find_elements_by_class_name("question_holder")
+    result = browser.find_element(By.CLASS_NAME, "question_holder")
     question_list = []
     for question in result:
-        question_text = question.find_elements_by_class_name("question_text")[0].text
+        question_text = question.find_element(By.CLASS_NAME, "question_text")[0].text
         answers = []
-        for answer in question.find_elements_by_class_name("answer_text"):
+        for answer in question.find_element(By.CLASS_NAME, "answer_text"):
             answers.append(answer.text)
-        correct_answers = question.find_elements_by_class_name("info")
+        correct_answers = question.find_element(By.CLASS_NAME, "info")
         correct_ids = [correct.get_attribute("id").split("_")[1] for correct in correct_answers]
-        correct_texts = [question.find_elements_by_xpath(f'//label[@for="answer-{correct_id}"]')[0].text for correct_id
+        correct_texts = [question.find_element(By.XPATH, f'//label[@for="answer-{correct_id}"]')[0].text for correct_id
                          in
                          correct_ids]
         # dic = {"stem": question_text, "answers": answers, "correct_answers": correct_texts}
@@ -54,8 +55,8 @@ def question_list_merge(a: List[Question], b: List[Question]):
 
 
 def answer_question(browser: WebDriver, question_dict: dict):
-    stem = browser.find_elements_by_class_name("question_text")[0].text
-    answers_element = browser.find_elements_by_class_name("answer_label")
+    stem = browser.find_element(By.CLASS_NAME, "question_text").text
+    answers_element = browser.find_elements(By.CLASS_NAME, "answer_label")
     answers = [answer.text for answer in answers_element]
     cur_question = Question(stem=stem, answers=answers)
     find_question = None
