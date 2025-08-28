@@ -73,8 +73,11 @@ def answer_question(browser: WebDriver, question_dict: dict):
 
 
 def answer_all_questions(browser: WebDriver, question_dict: dict):
+    sleep_tm = 1
     answer_question(browser, question_dict)
+    time.sleep(sleep_tm)
     while goto_next_question(browser) is not None:
+        time.sleep(sleep_tm)
         answer_question(browser, question_dict)
     time.sleep(5)
     submit_exam(browser)

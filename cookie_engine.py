@@ -43,6 +43,11 @@ def driver_get_with_cookies(url, path=cookie_path):
     time.sleep(5)
     return browser
 
+def driver_manual_auth(url):
+    browser = webdriver.Chrome(executable_path=driver_path)
+    browser.get(url)
+    time.sleep(input_wait_time)  # 进行扫码
+    return browser
 
 if __name__ == "__main__":
     driver = webdriver.Chrome(executable_path=driver_path)
