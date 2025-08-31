@@ -11,29 +11,26 @@
 ![img.png](asset/img3.png)
 
 ## 环境配置
-### selenium
-可以自行去网上搜索下载方案，比如
-https://blog.csdn.net/qq_48736958/article/details/115179198
+### 创建虚拟环境
 
-其中下载selenium时请使用
-```text
-pip install selenium==3.14.0
+```powershell
+python -m venv venv  
 ```
-### 其他依赖
+### 激活虚拟环境
+```powershell
+.\venv\Scripts\activate   
+```
+
+### 下载依赖
+
 ```text
-selenium==3.14.0
-json
-os
-time
-typing
+pip install selenium==3.14.0 webdriver-manager -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 ### 环境变量
 （如果不需要优化本项目，仅仅想要使用的同学可以跳过这一部分）
 本项目的环境变量在`environment.py`中
 
 ```python
-driver_path = "your/webdriver/path"
-# default
 auth_url = "https://uis.fudan.edu.cn/authserver/login"
 main_page = r"https://elearning.fudan.edu.cn/courses/70240/quizzes/9962"
 take_page = r"https://elearning.fudan.edu.cn/courses/70240/quizzes/9962/take"
@@ -46,8 +43,6 @@ if_add_question = True
 
 input_wait_time = 20
 ```
-- driver_path: 如果你在安装selenium时，把webdriver放在了python的目录底下，就可以把这行注释掉了。
-否则，要填入你的webdriver的路径。
 - auth_url: 复旦验证服务器的url。
 - main_page: 测试界面的url，测试界面如下图所示。
 ![img.png](asset/img.png)
