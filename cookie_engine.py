@@ -3,8 +3,8 @@ import os
 import time
 from selenium import webdriver
 
-from environment import auth_url, cookie_path, input_wait_time, driver_path, main_page, if_load_cookie
-
+from environment import auth_url, cookie_path, input_wait_time, main_page, if_load_cookie
+from webdriver_manager.chrome import ChromeDriverManager
 
 def load_cookies(log_url, browser, path=cookie_path):
     """
@@ -28,14 +28,14 @@ def get_cookies(browser, path=cookie_path):
 
 
 def driver_get_with_cookies(url, path=cookie_path):
-    browser = webdriver.Chrome(executable_path=driver_path)
+    browser = webdriver.Chrome(ChromeDriverManager().install())
 
     if not os.path.exists(path) or if_load_cookie:
         try:
             load_cookies(auth_url, browser, path)
         finally:
             browser.quit()
-            browser = webdriver.Chrome(executable_path=driver_path)
+            browser = webdriver.Chrome(ChromeDriverManager().install())
 
     browser.get(url)
     get_cookies(browser, path)
@@ -44,13 +44,13 @@ def driver_get_with_cookies(url, path=cookie_path):
     return browser
 
 def driver_manual_auth(url):
-    browser = webdriver.Chrome(executable_path=driver_path)
+    browser = webdriver.Chrome(ChromeDriverManager().install())
     browser.get(url)
     time.sleep(input_wait_time)  # 进行扫码
     return browser
 
 if __name__ == "__main__":
-    driver = webdriver.Chrome(executable_path=driver_path)
+    driver = webdriver.Chrome(ChromeDriverManager().install())
     load_cookies(auth_url, driver, "./my_cookie.txt")
     input()
     driver.quit()
