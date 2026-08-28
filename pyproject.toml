@@ -1,0 +1,28 @@
+[project]
+name = "fudan-freshman-test-2026"
+version = "2026.8.26"
+description = "Fudan 2026 freshman education quiz helper"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "selenium>=4.36,<5",
+]
+
+[project.scripts]
+fudan-test = "main:main"
+fudan-update-bank = "load_question:main"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = [
+    "cookie_engine",
+    "environment",
+    "load_question",
+    "main",
+    "operation_engine",
+    "question",
+    "question_engine",
+]

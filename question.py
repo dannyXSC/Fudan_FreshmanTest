@@ -1,47 +1,36 @@
-from typing import List
-import json
+import re
+
+
+def normalize_text(value):
+    return re.sub(r"\s+", " ", value or "").strip()
 
 
 class Question(object):
-    def __init__(self, stem: str = "", answers=None, correct_answers=None):
-        if correct_answers is None:
-            correct_answers = []
-        if answers is None:
-            answers = []
-        self.stem = stem
-        self.answers = answers
-        self.correct_answers = correct_answers
-        self.answers_set = {answer for answer in answers}
-        self.correct_answers_set = {correct for correct in correct_answers}
-
-    def set_stem(self, stem):
-        self.stem = stem
-
-    def set_answers(self, answers):
-        self.answers = answers
-        self.answers_set = {answer for answer in answers}
-
-    def set_correct_answers(self, correct_answers):
-        self.correct_answers = correct_answers
-        self.correct_answers_set = {correct for correct in correct_answers}
+    def __init__(self, stem="", answers=None, correct_answers=None):
+        self.stem = normalize_text(stem)
+        self.answers = [normalize_text(item) for item in (answers or [])]
+        self.correct_answers = [
+            normalize_text(item) for item in (correct_answers or [])
+        ]
+        self.answers_set = set(self.answers)
+        self.correct_answers_set = set(self.correct_answers)
 
     def to_dict(self):
-        return {"stem": self.stem, "answers": self.answers, "correct_answers": self.correct_answers}
+        return {
+            "stem": self.stem,
+            "answers": self.answers,
+            "correct_answers": self.correct_answers,
+        }
 
     def equal(self, other):
-        if self.stem != other.stem:
-            return False
-        # if len(self.answers) != len(other.answers) or len(self.correct_answers) != len(other.correct_answers):
-        if len(self.answers) != len(other.answers):
-            return False
-        for item in other.answers:
-            if item not in self.answers_set:
-                return False
-        # for item in other.correct_answers:
-        #     if item not in self.correct_answers:
-        #         return False
-        return True
+        return self.stem == other.stem and self.answers_set == other.answers_set
+
+    @property
+    def is_usable(self):
+        return bool(self.correct_answers_set) and self.correct_answers_set.issubset(
+            self.answers_set
+        )
 
     @classmethod
-    def from_dict(cls, dic):
-        return cls(dic["stem"], dic["answers"], dic["correct_answers"])
+    def from_dict(cls, data):
+        return cls(data["stem"], data["answers"], data["correct_answers"])

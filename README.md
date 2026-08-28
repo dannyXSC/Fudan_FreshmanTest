@@ -1,95 +1,94 @@
-# FreshmanTest
+# Fudan Freshman Test 2026
 
-本项目为复旦大学入学教育测试自动答题脚本，旨在帮助大家度过一个更加轻松的开学季。
+复旦大学 2026 级研究生入学教育测试辅助工具。项目已升级到 Selenium 4，默认连接：
 
-## 成果
-本项目的目标是尽可能地操作方便，以让更多的同学能够使用。
-
-基本上能够稳上90分，如果未来因为题库更新的原因正确率下降，可以自行通过本项目自带的更新
-题库功能，来提高准确率。
-
-![img.png](asset/img3.png)
-
-## 环境配置
-### selenium
-可以自行去网上搜索下载方案，比如
-https://blog.csdn.net/qq_48736958/article/details/115179198
-
-其中下载selenium时请使用
 ```text
-pip install selenium==3.14.0
-```
-### 其他依赖
-```text
-selenium==3.14.0
-json
-os
-time
-typing
-```
-### 环境变量
-（如果不需要优化本项目，仅仅想要使用的同学可以跳过这一部分）
-本项目的环境变量在`environment.py`中
-
-```python
-driver_path = "your/webdriver/path"
-# default
-auth_url = "https://uis.fudan.edu.cn/authserver/login"
-main_page = r"https://elearning.fudan.edu.cn/courses/70240/quizzes/9962"
-take_page = r"https://elearning.fudan.edu.cn/courses/70240/quizzes/9962/take"
-
-cookie_path = 'asset/cookies.txt'
-question_path = "asset/questions.json"
-
-if_load_cookie = False
-if_add_question = True
-
-input_wait_time = 20
-```
-- driver_path: 如果你在安装selenium时，把webdriver放在了python的目录底下，就可以把这行注释掉了。
-否则，要填入你的webdriver的路径。
-- auth_url: 复旦验证服务器的url。
-- main_page: 测试界面的url，测试界面如下图所示。
-![img.png](asset/img.png)
-- cookie_path: 保存cookie的位置（不上传到github）
-- question_path: 保存题库的位置（上传）
-- if_load_cookie: 是否每次启动要加载一次cookie（为True则要重新加载）
-  - 默认情况如果加载过cookie，则之后启动不再需要cookie
-  - 当你很久未使用本项目（cookie失效），要么删除cookie.txt，要么将这个变量设置为True
-- if_add_question: 每次更新是覆盖还是增加（为True则增加）
-- input_wait_time: 输入密码的时间(s)
-
-## 运行
-因为存在多选题，所以你在运行程序之前必须把未完成的测试提交了
-
-这样是错误的
-
-![img_1.png](asset/img6.png)
-
-而这样是正确的
-
-![img.png](asset/img5.png)
-
-在项目文件夹打开terminal，输入以下命令
-```text
-python main.py
-```
-**登录以获得Cookie**
-
-在这个界面你默认将会有20s的时间来输入你的账号密码，由于本项目只会获得cookie，只要你不把你的cookie传到网上，则没有安全问题
-![img.png](asset/img2.png)
-
-接下来就不需要你操作了，脚本会自动执行。
-
-### 扩充题库
-为了以防未来题库扩充，或者题库数据被污染，所以本项目带有扩充题库功能。
-
-如果你需要删除以前的题库，则将`environment.py`中的`if_add_question`设置为False
-```python
-if_add_question = False
-```
-并执行以下命令，否则则将`if_add_question`设置为True，此时，题库将会增长而不覆盖。
-```text
-python load_question.py
+https://elearning.fudan.edu.cn/courses/113489/quizzes/14232
 ```
 
+## 本仓库从未在任何地方开放打赏/留微信等，若是有，可能需要确定一下是不是被忽悠了。
+## 对于不太熟悉python等的同学，可以使用这里的题库搜索。
+https://github.com/Recqvq/Fudan_FreshmanTest2026/blob/main/asset/questions.json
+
+实验室安全测试可以参考 https://github.com/Recqvq/Fudan_SafeTest2026
+
+## 一键开始
+
+电脑需要安装 Chrome 和 [uv](https://docs.astral.sh/uv/)。克隆仓库后执行：
+
+```bash
+git clone git@github.com:Recqvq/Fudan_FreshmanTest2026.git
+cd Fudan_FreshmanTest2026
+uv run fudan-test
+```
+
+`uv` 会自动准备 Python、安装锁定版本的依赖并启动 Chrome。首次运行需要在 Chrome 中手动完成复旦统一认证；登录状态保存在本地 `.runtime/`，不会提交到 Git。
+
+默认命令是只读检查：验证登录、测验页面以及“开始/继续测验”按钮，不点击测验、不答题、不提交。
+
+运行完成后 Chrome 默认保持打开，按终端提示回车才会关闭。自动化测试可添加 `--auto-close`。
+
+## 使用方式
+
+只读检查：
+
+```bash
+uv run fudan-test
+```
+
+根据本地题库选择答案，但不提交：
+
+```bash
+uv run fudan-test --execute
+```
+
+根据本地题库选择答案并提交：
+
+```bash
+uv run fudan-test --execute --submit
+```
+
+## 更新题库
+
+题库更新继续采用原仓库的方法：提交当前测验后，从结果页读取正确答案，再合并到 `asset/questions.json`。当前测验可以是空白尝试，也可以是已经选过部分答案的尝试。
+
+先做只读检查：
+
+```bash
+uv run fudan-update-bank
+```
+
+确认要产生一次提交记录后执行：
+
+```bash
+uv run fudan-update-bank --update-bank --confirm-attempt-submit
+```
+
+写入新题库前，程序会将旧题库备份为 `asset/questions.before_2026.json`。只有结果页成功解析出正确答案时才会写入题库。
+
+程序会校验每条题库记录：正确答案必须非空且属于该题选项。污染或不完整记录会被跳过，绝不会用于自动勾选或正式提交。
+
+## 安全设计
+
+- 默认只读，不点击任何测验控件。
+- 开始或继续测验必须显式传入 `--execute` 或 `--update-bank`。
+- 正式提交必须显式传入 `--submit`。
+- 题库采集必须同时传入 `--update-bank --confirm-attempt-submit`。
+- 账号和密码只在复旦登录页输入，程序不读取或保存密码。
+- ChromeDriver 由 Selenium Manager 自动匹配，不再需要手动下载或配置路径。
+
+## 本地验证
+
+```bash
+uv run python -m unittest discover -s tests -v
+```
+
+当前题库采用以下结构：
+
+```json
+{
+  "stem": "题干",
+  "answers": ["选项一", "选项二"],
+  "correct_answers": ["选项一"]
+}
+```
